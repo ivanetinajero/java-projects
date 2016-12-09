@@ -5,8 +5,6 @@ package net.itinajero;
 */
 
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
@@ -14,9 +12,9 @@ import org.apache.commons.mail.HtmlEmail;
 public class EmailService {
 
    // La direccion de correo de gmail que sera la usada para enviar el correo.
-   static String GMAIL_USER = "soporte.demo489@gmail.com";
+   static String GMAIL_USER = "some@gmail.com";
    // Esta es la contrasena de la cuenta de gmail que se usara para enviar el correo.
-   static String GMAIL_PWD = "_masterkey";
+   static String GMAIL_PWD = "*******";
    static String SMTP_HOST_NAME = "smtp.gmail.com";
    static Integer SMTP_HOST_PORT = 587;
 
