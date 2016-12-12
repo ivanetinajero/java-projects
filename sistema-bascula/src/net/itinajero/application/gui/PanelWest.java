@@ -28,7 +28,7 @@ public class PanelWest extends JPanel {
       layout.setHgap(3); layout.setVgap(3); // Espaciado entre componentes     
       setLayout(layout);
       //setPreferredSize(new Dimension(130, 130));
-      for (int i = 0; i < 50; ++i) {
+      for (int i = 0; i < 100; ++i) {
          ImageIcon icon = new ImageIcon("/home/ivan/tmp-img/watermelon.png");
          String buttonTitle = "Title " + i;
          String buttonId = "idCategoria" + i;
@@ -55,7 +55,12 @@ public class PanelWest extends JPanel {
    public void updateCenter(int idCategoria,JPanel panel) {
             
       // DAO productos por idCategoria
-      GridLayout layout = new GridLayout(0, 6);
+      int cols=5;
+      int rows = 0;
+      if (idCategoria<=4){
+         cols=1;         
+      }   
+      GridLayout layout = new GridLayout(rows, cols);
       layout.setHgap(3); layout.setVgap(3); // espaciando entre componentes    
       panel.setLayout(layout);
       System.out.println("Dibujando: " + idCategoria + " botones");
@@ -67,7 +72,7 @@ public class PanelWest extends JPanel {
          button.setHorizontalTextPosition(JButton.CENTER);
          button.setVerticalTextPosition(JButton.BOTTOM);
          button.setName(buttonId); // Name of the button  
-         button.setPreferredSize(new Dimension(50, 50));
+         button.setPreferredSize(new Dimension(100, 100));
          button.addActionListener((java.awt.event.ActionEvent e) -> {
             JButton b1 = (JButton) e.getSource(); // Referencia del boton seleccionado
             System.out.println(b1.getName());
