@@ -1,28 +1,41 @@
 package net.itinajero.application.gui;
 
+import java.util.Random;
 import javax.swing.JLabel;
 
-public class Process extends Thread { 
+public class Process extends Thread {
 
    private volatile boolean running = true; // thread   
-   private int counter = 0;
-   private String peso="";
+   private String descProducto;
    private JLabel producto;
+
+   public Process(String descProducto) {
+      this.descProducto = descProducto;
+   }
 
    @Override
    public void run() {
+      // Solo para simular los pesos que nos da la bascula
+      Random randomGenerator = new Random();
+      System.out.println("Trabajando con producto: " + producto.getName());
       while (running) {
-         counter++;
-         try {           
-            peso = "Loop "+ counter + ": " + Utility.randomAlphaNumeric(4);            
-            producto.setText(peso);
-            System.out.println(peso);
+         
+         try {
+            
+            int randomInt = randomGenerator.nextInt(100); // peso simulado
+
+            producto.setText(descProducto + " " + String.valueOf(randomInt)); // Actualizamos el display NombreProducto 4.5 KG            
+            // en el toolTipText guardaremos lo que nos da la bascula. Ejemplo: 4.5 KG
+            producto.setToolTipText(randomInt + " KG");
+            
+            if (producto.getName().equals("0")) {               
+               System.out.println("Detected stop");
+               running = false;
+            }
             Thread.sleep(1000);
+                        
          } catch (InterruptedException ex) {
             System.out.println("Error Process.run: " + ex.getMessage());
-         }
-         if (!running) {
-            System.out.println("Detected stop");
          }
       }
    }
@@ -31,20 +44,12 @@ public class Process extends Thread {
       return running;
    }
 
-   public void setRunning(boolean running) {
-      this.running = running;
-   }
-   
    public void stopProcess() {
       running = false;
-   }
-
-   public String getPeso() {
-      return peso;
    }
 
    public void setProducto(JLabel producto) {
       this.producto = producto;
    }
-         
+
 }
