@@ -1,29 +1,26 @@
 package net.itinajero.application.gui;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
 
 public class PanelWest extends JPanel {
      
    private JFrame frame;
-   private JPanel panel;
+   private JPanel panelProductos;
    private JLabel producto;
+   private Process proceso;
    
-   public PanelWest(JFrame frame, JPanel panel, JLabel producto) {
+   public PanelWest(JFrame frame, JPanel panelProductos, JLabel producto,Process proceso) {
       System.out.println("Constructor PanelWest");  
       this.frame = frame;
-      this.panel = panel;
+      this.panelProductos = panelProductos;
       this.producto = producto;
-     
+      this.proceso=proceso;
       GridLayout layout = new GridLayout(0, 1);
       layout.setHgap(3); layout.setVgap(3); // Espaciado entre componentes     
       setLayout(layout);
@@ -38,11 +35,10 @@ public class PanelWest extends JPanel {
          button.setName(buttonId); // Name of the button  
          // button.setPreferredSize(new Dimension(90, 90));
          button.addActionListener((java.awt.event.ActionEvent e) -> {
-         JButton b1 = (JButton) e.getSource(); // Referencia del boton seleccionado
-         System.out.println("Click " + b1.getName());  
+         JButton b1 = (JButton) e.getSource(); // Referencia del boton seleccionado         
          int idCategoria = Integer.parseInt(b1.getName().substring(11));
-         panel.removeAll();
-         updateCenter(idCategoria,panel);            
+         panelProductos.removeAll();
+         updateCenter(idCategoria,panelProductos);            
          frame.revalidate();
          frame.repaint();                        
 
@@ -52,7 +48,7 @@ public class PanelWest extends JPanel {
    }
    
    
-   public void updateCenter(int idCategoria,JPanel panel) {
+   public void updateCenter(int idCategoria,JPanel panelProductos) {
             
       // DAO productos por idCategoria
       int cols=5;
@@ -62,8 +58,8 @@ public class PanelWest extends JPanel {
       }   
       GridLayout layout = new GridLayout(rows, cols);
       layout.setHgap(3); layout.setVgap(3); // espaciando entre componentes    
-      panel.setLayout(layout);
-      System.out.println("Dibujando: " + idCategoria + " botones");
+      panelProductos.setLayout(layout);
+      
       for (int i = 0; i < idCategoria; ++i) {
          ImageIcon icon = new ImageIcon("/home/ivan/tmp-img/apple.png");
          String buttonTitle = "Title " + i;
@@ -74,14 +70,35 @@ public class PanelWest extends JPanel {
          button.setName(buttonId); // Name of the button  
          button.setPreferredSize(new Dimension(100, 100));
          button.addActionListener((java.awt.event.ActionEvent e) -> {
-            JButton b1 = (JButton) e.getSource(); // Referencia del boton seleccionado
-            System.out.println(b1.getName());
+            JButton b1 = (JButton) e.getSource(); // Referencia del boton seleccionado            
             producto.setText("Precio: " + b1.getName());
             producto.setName(b1.getName());
             String choice = e.getActionCommand();
+            if (proceso==null){
+               System.out.println("Proceso no creado");
+               proceso = new Process();
+               // Le mandamos al thread una referencia del JLabel del producto
+               // para que siempre nos actualice el peso
+               proceso.setProducto(producto);
+               proceso.start(); // Iniciamos el thread
+            }else{
+               if (proceso.isRunning()){
+                  /* Detenemos este thread. Matar proceso, debido a que termina
+                     el metodo run.
+                  */
+                  proceso.stopProcess();
+                  // Volvemos a crear un nuevo Thread (nuevo producto seleccionado)
+                  proceso = new Process();
+                  proceso.setProducto(producto);
+                  proceso.start(); // Iniciamos el thread
+               }   
+            }
+            
+            System.out.println("Estatus Proceso running: " +  proceso.isRunning());
+            
             //JOptionPane.showMessageDialog(null, "Escuchando: Producto: " + choice);            
          });
-         panel.add(button);
+         panelProductos.add(button);
       }
    }
    
