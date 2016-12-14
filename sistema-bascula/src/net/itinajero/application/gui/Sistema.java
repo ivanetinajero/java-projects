@@ -13,19 +13,23 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import net.itinajero.application.gui.dto.Producto;
+import net.itinajero.application.gui.util.ThreadUtil;
 
 public class Sistema {
 
    private JFrame frame;
    private Font font;
-   private JLabel producto; // Referencia al nombre del producto Seleccionado.
+   private JLabel productoDisplay; // Referencia al nombre del producto Seleccionado.
    private String nomProducto; // Referencia para tener el nombre del producto seleccionado
    private JScrollPane scroll;
    private JScrollBar bar;
    private JPanel panelProductos; // Panel para los botones del productos (CENTER)
-   private PanelWest panelCategorias; // panel para los botones de las categorias (IZQ)
-   private Process proceso;
+   private PanelWest panelCategorias; // panel para los botones de las categorias (IZQ)   
    private JButton cmdPrint;
+   // Este objeto de tipo Producto siempre tendra una referencia del producto seleccionado
+   // con un boton y que, por lo tanto un Thread lo esta procesando.
+   private Producto prodThread=new Producto(0);
 
    public Sistema() {
       
@@ -46,7 +50,7 @@ public class Sistema {
       /* Fin Panel Productos */
       
       /* Inicio Panel Categorias */
-      panelCategorias = new PanelWest(frame, panelProductos, producto, proceso);
+      panelCategorias = new PanelWest(frame, panelProductos, productoDisplay, prodThread);
       scroll = new JScrollPane(panelCategorias);
       scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
       scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -67,33 +71,43 @@ public class Sistema {
 
    void initPanelNorth(){
       // Configuracion etiqueta el producto (Peso)
-      producto = new JLabel("Seleccione Categoría");
-      producto.setHorizontalAlignment(0);
+      productoDisplay = new JLabel("Seleccione Categoría");
+      productoDisplay.setHorizontalAlignment(0);
       font = new Font("Courier New", 1, 40);
-      producto.setFont(font);
+      productoDisplay.setFont(font);
       
       // Configuracion boton de imprimir
       cmdPrint = new JButton("Imprimir");
       cmdPrint.setPreferredSize(new Dimension(30,40));
       
+      // Evento Click del boton Imprimir
       cmdPrint.addActionListener(new ActionListener() {
          @Override
-         public void actionPerformed(ActionEvent e) {            
-            String display = producto.getText(); // Retenemos el ultimo display en pantalla
-            String peso = producto.getToolTipText(); // retenemos el ultimo peso generado por la bascula
-            int idProducto = Integer.parseInt(producto.getName()); // retenemos el idProducto
-            producto.setName("0"); // Esta es la señal para detener el proceso            
-            System.out.println("idProducto: " + idProducto);
-            System.out.println("Peso Bascula: " + peso);
-            System.out.println("Display: " + display);
-            producto.setText(display);
-            //JOptionPane.showMessageDialog(null, "Imprimiendo: Producto: ");
+         public void actionPerformed(ActionEvent e) {             
+            /* Cada que se presiona un boton de imprimir revisaremos si hay un thread en ejecucion. 
+               Si existe uno, es señal que hay un thread trabajando mandando el peso.               
+            */
+            if (prodThread.getId()!=0){ 
+               // al imprimir, primero detenemos el thread
+               ThreadUtil.stopThreadByName(String.valueOf(prodThread.getId()));
+               
+               // Retenemos el ultimo display en pantalla
+               String display = productoDisplay.getText(); 
+               // retenemos el ultimo peso generado por la bascula
+               String peso = productoDisplay.getToolTipText(); 
+               productoDisplay.setText(display);
+               Impresora printer = new Impresora(prodThread, peso); 
+               printer.printLabel();
+               JOptionPane.showMessageDialog(null, "Imprimiendo " + peso + " de " +prodThread.getDescripcion());
+            }else{
+               JOptionPane.showMessageDialog(null, "Seleccione un producto.");
+            }   
          }
       });
       
       JPanel panel = new JPanel(); // Panel para organizar los componentes
       panel.setLayout(new GridLayout(1, 4));
-      panel.add(producto);
+      panel.add(productoDisplay);
       panel.add(cmdPrint);
       frame.add(panel,BorderLayout.NORTH);          
       

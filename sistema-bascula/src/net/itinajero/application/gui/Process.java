@@ -2,15 +2,17 @@ package net.itinajero.application.gui;
 
 import java.util.Random;
 import javax.swing.JLabel;
+import net.itinajero.application.gui.dto.Producto;
 
 public class Process extends Thread {
 
    private volatile boolean running = true; // thread   
-   private String descProducto;
+   private Producto seleccionado;
    private JLabel producto;
 
-   public Process(String descProducto) {
-      this.descProducto = descProducto;
+   public Process(Producto producto) {
+      this.setName(String.valueOf(producto.getId()));
+      this.seleccionado = producto;
    }
 
    @Override
@@ -24,7 +26,7 @@ public class Process extends Thread {
             
             int randomInt = randomGenerator.nextInt(100); // peso simulado
 
-            producto.setText(descProducto + " " + String.valueOf(randomInt)); // Actualizamos el display NombreProducto 4.5 KG            
+            producto.setText(seleccionado.getDescripcion() + " " + String.valueOf(randomInt)); // Actualizamos el display NombreProducto 4.5 KG            
             // en el toolTipText guardaremos lo que nos da la bascula. Ejemplo: 4.5 KG
             producto.setToolTipText(randomInt + " KG");
             
