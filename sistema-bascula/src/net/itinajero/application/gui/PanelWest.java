@@ -57,7 +57,7 @@ public class PanelWest extends JPanel {
             JButton b1 = (JButton) e.getSource(); // Referencia del boton seleccionado         
             int idCategoria = Integer.parseInt(b1.getName().substring(11));
             panelProductos.removeAll();
-            updateCenter(idCategoria, panelProductos);
+            updateCenter(idCategoria, panelProductos);           
             frame.revalidate();
             frame.repaint();
          });
@@ -69,6 +69,8 @@ public class PanelWest extends JPanel {
 
    public void updateCenter(int idCategoria, JPanel panelProductos) {
 
+      producto.setName("0"); // senal para detener threads si existen
+      
       // DAO productos por idCategoria
       int cols = 5;
       int rows = 0;
