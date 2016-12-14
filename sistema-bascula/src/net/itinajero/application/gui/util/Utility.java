@@ -1,4 +1,4 @@
-package net.itinajero.application.gui;
+package net.itinajero.application.gui.util;
 
 public class Utility {
 

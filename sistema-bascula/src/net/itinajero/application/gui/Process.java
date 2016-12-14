@@ -34,7 +34,7 @@ public class Process extends Thread {
                System.out.println("Detected stop");
                running = false;
             }
-            Thread.sleep(1000);
+            Thread.sleep(500);
                         
          } catch (InterruptedException ex) {
             System.out.println("Error Process.run: " + ex.getMessage());
