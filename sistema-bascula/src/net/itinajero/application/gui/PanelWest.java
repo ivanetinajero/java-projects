@@ -110,7 +110,7 @@ public class PanelWest extends JPanel {
          conn.disconnect();
       }
 
-      int cols = 5;
+      int cols = 6;
       int rows = 0;
       // Si son pocos productos, los mostramos en una sola columna (hacia abajo)
       if (listaProd.size() <= 4) {
@@ -130,6 +130,7 @@ public class PanelWest extends JPanel {
          button.setHorizontalTextPosition(JButton.CENTER);
          button.setVerticalTextPosition(JButton.BOTTOM);
          button.setName(String.valueOf(tmpprod.getId())); // el nombre del boton es el idProducto  
+         //button.setToolTipText("45281"); // Aqui pondremos el codigo de barras
          button.setPreferredSize(new Dimension(100, 100));
 
          // Inicio Evento Click de cada boton de Producto
