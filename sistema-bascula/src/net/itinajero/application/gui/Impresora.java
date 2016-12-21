@@ -9,6 +9,14 @@ import javax.print.PrintException;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import javax.print.SimpleDoc;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.Copies;
+import javax.print.attribute.standard.MediaSize;
+import javax.print.attribute.standard.MediaSizeName;
+import javax.print.attribute.standard.OrientationRequested;
+import javax.print.attribute.standard.PageRanges;
+import javax.print.attribute.standard.Sides;
 import net.itinajero.application.gui.dto.Producto;
 
 public class Impresora {
@@ -40,7 +48,9 @@ public class Impresora {
          
          // convertimos el comando a bytes  
          byte[] cmd = zplCommand.getBytes();
-         DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
+         
+         // Set the document type
+         DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE; 
          Doc doc = new SimpleDoc(cmd, flavor, null);
 
          // creamos el printjob  
@@ -67,8 +77,23 @@ public class Impresora {
       // Buscar la impresora predeterminada
       // PrintService printService = PrintServiceLookup.lookupDefaultPrintService();
 
-      // Buscar todas las impresoras instaladas en el equipo
-      PrintService[] services = PrintServiceLookup.lookupPrintServices(null, null);
+      // Set the document type
+      DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE; 
+      //DocFlavor flavor = DocFlavor.INPUT_STREAM.PDF;
+      
+      // Build a set of attributes
+      PrintRequestAttributeSet attr_set = new HashPrintRequestAttributeSet(); 
+      
+      //attr_set.add(OrientationRequested.LANDSCAPE); // orientation      
+      //attr_set.add(MediaSizeName.ISO_A4); // A4 paper format 
+      //attr_set.add(new PageRanges(3, 4));
+      //attr_set.add(Sides.DUPLEX); // find printers that have double-sided printing capability
+      //attr_set.add(new Copies(3)); // three copies of your document
+            
+      // discover the printers that can print the document type according to the
+      // instructions in the attribute set
+      PrintService[] services = PrintServiceLookup.lookupPrintServices(null,attr_set);
+      
       for (PrintService service : services) {
          //System.out.println("Impresora instalada: " + service.getName());
          if (service.getName().contains(printerName)) {
