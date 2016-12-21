@@ -8,6 +8,9 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.print.PrintException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -119,17 +122,21 @@ public class Sistema {
                Si existe uno, es señal que hay un thread trabajando mandando el peso.               
             */
             if (prodThread.getId()!=0){ 
-               // al imprimir, primero detenemos el thread
-               ThreadUtil.stopThreadByName(String.valueOf(prodThread.getId()));
-               
-               // Retenemos el ultimo display en pantalla
-               String display = productoDisplay.getText(); 
-               // retenemos el ultimo peso generado por la bascula
-               String peso = productoDisplay.getToolTipText(); 
-               productoDisplay.setText(display);
-               Impresora printer = new Impresora(prodThread, peso); 
-               printer.printLabel();
-               JOptionPane.showMessageDialog(null, "Imprimiendo " + peso + " de " +prodThread.getDescripcion());
+               try {
+                  // al imprimir, primero detenemos el thread
+                  ThreadUtil.stopThreadByName(String.valueOf(prodThread.getId()));
+                  
+                  // Retenemos el ultimo display en pantalla
+                  String display = productoDisplay.getText();
+                  // retenemos el ultimo peso generado por la bascula
+                  String peso = productoDisplay.getToolTipText();
+                  productoDisplay.setText(display);
+                  Impresora printer = new Impresora(prodThread, peso,"PDF");
+                  printer.printLabel();
+                  JOptionPane.showMessageDialog(null, "Imprimiendo " + peso + " de " +prodThread.getDescripcion());
+               } catch (PrintException ex) {
+                  System.out.println("Error al imprimir: " + ex.getMessage());
+               }
             }else{
                JOptionPane.showMessageDialog(null, "Seleccione un producto.");
             }   
@@ -162,7 +169,7 @@ public class Sistema {
                      System.out.println("Encontrado Huevo");
                      tmpbtn.setBackground(Color.lightGray);
                   } else{
-                     //tmpbtn.setVisible(false);
+                     tmpbtn.setVisible(false);
                   }  
                }
             }

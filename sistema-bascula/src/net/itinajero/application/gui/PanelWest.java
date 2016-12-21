@@ -58,7 +58,7 @@ public class PanelWest extends JPanel {
 
       // Dibujamos un boton por cada categoria
       for (Categoria tmpcat : listaCat) {
-         ImageIcon icon = new ImageIcon("/home/ivan/tmp-img/watermelon.png1");
+         ImageIcon icon = new ImageIcon("/home/ivan/tmp-img/watermelon.png");
          String buttonTitle = tmpcat.getNombre();        
          JButton button = new JButton(buttonTitle, icon); // text of the button
          button.setHorizontalTextPosition(JButton.CENTER);
@@ -123,7 +123,7 @@ public class PanelWest extends JPanel {
 
       // Por cada producto, vamos a pintar un boton
       for (Producto tmpprod : listaProd) {
-         ImageIcon icon = new ImageIcon("/home/ivan/tmp-img/apple.png1");
+         ImageIcon icon = new ImageIcon("/home/ivan/tmp-img/apple.png");
          String buttonTitle = tmpprod.getDescripcion();
          //String buttonId = "idProducto" + i;
          JButton button = new JButton(buttonTitle, icon); // text of the button   
