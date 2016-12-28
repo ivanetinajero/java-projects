@@ -12,3 +12,7 @@
 /get-threads-instances/build/
 /sistema-bascula/dist/
 /sistema-bascula/build/
+/serial-port/nbproject/private/
+/serial-port/build/
+/java-simple-serial-connector/nbproject/private/
+/java-simple-serial-connector/build/
