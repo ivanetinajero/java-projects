@@ -16,3 +16,7 @@
 /serial-port/build/
 /java-simple-serial-connector/nbproject/private/
 /java-simple-serial-connector/build/
+/thread-synchronized/nbproject/private/
+/thread-synchronized/build/
+/thread-volatile/nbproject/private/
+/thread-volatile/build/
